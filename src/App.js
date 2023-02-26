@@ -3,6 +3,8 @@ import './styles/App.css';
 import PostList from "./Components/PostList";
 import PostForm from "./Components/PostForm";
 import PostFilter from "./Components/PostFilter";
+import MyModal from "./Components/UI/modal/MyModal";
+import MyButton from "./Components/UI/button/MyButton";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -10,10 +12,12 @@ function App() {
     {id: 2, title: 'B', body: 'H'},
     {id: 3, title: 'a', body: 'A'}
   ])
-  const [filter, setFilter] = useState({sort:'', query: ''})
+  const [filter, setFilter] = useState({sort:'', query: ''});
+  const [modal, setModal] = useState(false)
   
   const createPost = (newPost)=>{
-    setPosts([...posts, newPost])
+    setPosts([...posts, newPost]);
+    setModal(false);
   }
   const removePost = (post)=>{
     setPosts(posts.filter(p => p.id !== post.id))
@@ -33,16 +37,15 @@ function App() {
   )
   return (
     <div className="App">
-      <PostForm create={createPost}/>
+      <MyButton onClick={()=>setModal(true)}>
+        Create
+      </MyButton>
+      <MyModal visible={modal} setVisible={setModal}>
+        <PostForm create={createPost}/>
+      </MyModal>
         <hr style={{margin:'15px 0'}}/>
-      <PostFilter 
-        filter={filter} 
-        setFilter={setFilter}/>
-        {sortedAndSearchedPosts.length 
-        ? <PostList posts={sortedAndSearchedPosts} title="Posts about JS"remove={removePost}/>
-        :<h1 style={{textAlign: 'center'}}>
-          Can't find posts</h1>
-      }
+      <PostFilter filter={filter} setFilter={setFilter}/>
+      <PostList posts={sortedAndSearchedPosts} title="Posts about JS"remove={removePost}/>
     </div>
     );
 }
