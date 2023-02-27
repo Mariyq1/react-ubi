@@ -6,23 +6,40 @@ import Loader from "./UI/loader/Loader";
 
 
 const PostIdPage = ()=>{
-    const [post, setPost] = useState({})
+    const [post, setPost] = useState({});
+    const[comments, setComments] = useState([]);
     const params = useParams();
     const [fetchPostById, isLoading, error] = useFetching(async(id)=>{
         const response = await PostServise.getById(id);
         setPost(response.data)
     })
+    const [fetchComments, isComLoading, comError] = useFetching(async(id)=>{
+        const response = await PostServise.getCommentsByPostId(id);
+        setComments(response.data)
+    })
     useEffect(()=>{
-        fetchPostById(params.id)
+        fetchPostById(params.id);
+        fetchComments(params.id);
     },[])
     return(
         <div>
             <h1>You open post page id = {params.id}</h1>
             {isLoading
-              ?<Loader/>
-              :<div>{post.id}.{post.title}</div>
+               ?<Loader/>
+               :<div>{post.id}.{post.title}</div>
             }
-            
+            <h1>Comments</h1>
+            {isComLoading
+                ?<Loader/>
+                :<div>
+                    {comments.map(comm =>
+                        <div style={{marginTop:15}}>
+                            <h5>{comm.email}</h5>
+                            <div>{comm.body}</div>
+                        </div>
+                        )}
+                </div>
+            }
         </div>
     )
 }
