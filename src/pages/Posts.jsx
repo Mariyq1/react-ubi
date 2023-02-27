@@ -50,9 +50,6 @@ function Posts() {
   
   return (
     <div className="App">
-      <MyButton onClick={()=>setModal(true)}>
-        Create
-      </MyButton>
       <MyModal visible={modal} setVisible={setModal}>
         <PostForm create={createPost}/>
       </MyModal>
